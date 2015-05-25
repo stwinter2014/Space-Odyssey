@@ -12,6 +12,7 @@ def Level_1 ():
     done = False
     clock = pygame.time.Clock()
 
+
     black      = (  0,   0,   0)
     white      = (255, 255, 255)
     orange     = (255,  69,   0)
@@ -25,6 +26,11 @@ def Level_1 ():
         add_Sp.Create_M_2(size, all_sprites_list, block_list, block2_list)
     player = Sp_class.Player()
     all_sprites_list.add(player)
+    explosion = Sp_class.Explosion()
+    explosion_list = pygame.sprite.Group()
+    explosion_list.add(explosion)
+    explosion.rect.x = 500
+    explosion.rect.y = 500
     rect_x = 380
     x_speed = 0
     time_up = 5000
@@ -32,10 +38,10 @@ def Level_1 ():
     timer = 0
     score = 0
     timeF = 0
-    
     x_w = 380
     y_w = 730
     parade = 0
+    image_evol = 0
     l_ch = 0
     count_time = 0
     ready_ch = 0
@@ -52,6 +58,8 @@ def Level_1 ():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
+
+
             if event.type == pygame.KEYDOWN:   
                 if event.key == pygame.K_LEFT:
                     x_speed = -10
@@ -65,6 +73,10 @@ def Level_1 ():
                 if event.key == pygame.K_RIGHT:
                     x_speed = 0
         screen.blit(background_image, [0,0])
+        image_evol += 1 
+        explosion_list.update(image_evol)
+        explosion_list.draw(screen)
+        """
         if timeF == 0:
             ready_ch += 1
         if ready_ch <= 60:
@@ -134,6 +146,7 @@ def Level_1 ():
             screen.blit(text, [680,50])
         else:
             pass
+            """
         pygame.display.flip()
         clock.tick(60)
     if lleft == 0:

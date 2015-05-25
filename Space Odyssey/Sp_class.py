@@ -63,4 +63,62 @@ class Weapon(pygame.sprite.Sprite):
     def update(self):
         self.rect.y -= 3
         
-
+class Explosion (pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load("explosion5.png").convert()
+        self.image.set_colorkey(black)
+        self.rect = self.image.get_rect()
+        self.rect.x = 500
+        self.rect.y = 500
+    def update(self, count):
+        if count >= 5 and count < 10:
+            self.image = pygame.image.load("explosion4.png").convert()
+            self.image.set_colorkey(black)
+            self.rect = self.image.get_rect()
+            self.rect.x = 500
+            self.rect.y = 500
+        if count >= 10 and count < 15:
+            self.image = pygame.image.load("explosion3.png").convert()
+            self.image.set_colorkey(black)
+            self.rect = self.image.get_rect()
+            self.rect.x = 500
+            self.rect.y = 500
+        if count >= 15 and count < 20:
+            self.image = pygame.image.load("explosion2.png").convert()
+            self.image.set_colorkey(black)
+            self.rect = self.image.get_rect()
+            self.rect.x = 500
+            self.rect.y = 500
+        if count >= 20 and count < 25:
+            self.image = pygame.image.load("explosion1.png").convert()
+            self.image.set_colorkey(black)
+            self.rect = self.image.get_rect()
+            self.rect.x = 500
+            self.rect.y = 500
+        if count >= 25 and count < 30:
+            self.image = pygame.image.load("explosion2.png").convert()
+            self.image.set_colorkey(black)
+            self.rect = self.image.get_rect()
+            self.rect.x = 500
+            self.rect.y = 500
+        if count >= 30 and count < 35:
+            self.image = pygame.image.load("explosion3.png").convert()
+            self.image.set_colorkey(black)
+            self.rect = self.image.get_rect()
+            self.rect.x = 500
+            self.rect.y = 500
+        if count >= 35 and count < 40:
+            self.image = pygame.image.load("explosion4.png").convert()
+            self.image.set_colorkey(black)
+            self.rect = self.image.get_rect()
+            self.rect.x = 500
+            self.rect.y = 500
+        if count >= 40 and count < 45:
+            self.image = pygame.image.load("explosion5.png").convert()
+            self.image.set_colorkey(black)
+            self.rect = self.image.get_rect()
+            self.rect.x = 500
+            self.rect.y = 500
+            
+            
