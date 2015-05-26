@@ -11,26 +11,28 @@ def Level_1 ():
     pygame.display.set_caption("Space Odyssey")
     done = False
     clock = pygame.time.Clock()
-
-
     black      = (  0,   0,   0)
     white      = (255, 255, 255)
     orange     = (255,  69,   0)
-    
+    image_evol = 0
+    exp1_pos = 340
+    exp2_pos = 250
+    pressed = False
     block_list = pygame.sprite.Group()
     block1_list = pygame.sprite.Group()
     block2_list = pygame.sprite.Group()
+    explosion_list = pygame.sprite.Group()
+    explosion = Sp_class.Explosion(exp1_pos, exp2_pos)
+    explosion_list.add(explosion)
     all_sprites_list = pygame.sprite.Group()
     for i in range(8):
         add_Sp.Create_M_1(size, all_sprites_list, block_list, block1_list)
         add_Sp.Create_M_2(size, all_sprites_list, block_list, block2_list)
     player = Sp_class.Player()
     all_sprites_list.add(player)
-    explosion = Sp_class.Explosion()
+    explosion = Sp_class.Explosion(exp1_pos, exp2_pos)
     explosion_list = pygame.sprite.Group()
     explosion_list.add(explosion)
-    explosion.rect.x = 500
-    explosion.rect.y = 500
     rect_x = 380
     x_speed = 0
     time_up = 5000
@@ -41,7 +43,6 @@ def Level_1 ():
     x_w = 380
     y_w = 730
     parade = 0
-    image_evol = 0
     l_ch = 0
     count_time = 0
     ready_ch = 0
@@ -58,8 +59,6 @@ def Level_1 ():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
-
-
             if event.type == pygame.KEYDOWN:   
                 if event.key == pygame.K_LEFT:
                     x_speed = -10
@@ -73,13 +72,25 @@ def Level_1 ():
                 if event.key == pygame.K_RIGHT:
                     x_speed = 0
         screen.blit(background_image, [0,0])
-        image_evol += 1 
-        explosion_list.update(image_evol)
-        explosion_list.draw(screen)
+        image_evol += 1
+        print(pygame.mouse.get_pressed()[0])
+        if pygame.mouse.get_pressed()[0] == 1:
+            pressed = True
+            pos = pygame.mouse.get_pos()
+            exp1_pos = pos[0]
+            exp2_pos = pos[1]
+        if pressed == True:
+            image_evol += 1
+            explosion_list.update(exp1_pos, exp2_pos, image_evol)
+            explosion_list.draw(screen)
+            if image_evol >= 45:
+                pressed = False
+                image_evol = 0
         """
         if timeF == 0:
             ready_ch += 1
         if ready_ch <= 60:
+
             screen.blit(ready_image, [340, 270])
             ready_image.set_colorkey(black)
             if ready_ch % 50 == 0:

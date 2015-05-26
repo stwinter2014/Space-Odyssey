@@ -1,4 +1,5 @@
 import pygame
+import Sp_class
 import add_Sp
 """Manual level.
 Here is a description of how the game (1st level)
@@ -14,16 +15,24 @@ def Manual_1 ():
     black      = (  0,   0,   0)
     white      = (255, 255, 255)
     orange     = (255,  69,   0)
+    """special objects for axplosion animation"""
+    pressed = False
+    image_evol = 0
+    exp1_pos = 0
+    exp2_pos = 0
     """sprite lists"""
     block1_list = pygame.sprite.Group()
     block2_list = pygame.sprite.Group()
     player_list = pygame.sprite.Group()
+    explosion_list = pygame.sprite.Group()
     """sprites creation"""
     for i in range(1):
         add_Sp.Create_MM_1(size, block1_list)
         add_Sp.Create_MM_2(size, block2_list)
     player = Sp_class.Player()
     player_list.add(player)
+    explosion = Sp_class.Explosion(exp1_pos, exp2_pos)
+    explosion_list.add(explosion)
     """strings with all the necessary messages"""
     manual_wel_f = 'Welcome to Space Odyssey!'
     manual_wel_s = 'Complete all 3 levels to return to your home planet.'
@@ -35,11 +44,13 @@ def Manual_1 ():
     manual01_look = 'Impact with bigger meteors will take two of your lives.'
     manual02_look = 'Be careful, big meteors move faster, than the smaller ones.'
     manual_finish = 'Now your are ready for your journey!'
+    manual_skip = 'Press SPACE to continue'
     x_speed = 0
     lleft = 5
     x_w = 380
     y_w = 730
     parade = 0
+    skip = 0
     ready = 0
     move_count = 5
     _seen = 0
@@ -69,9 +80,10 @@ def Manual_1 ():
                 if event.key == pygame.K_ESCAPE:
                     done = True
                 if event.key == pygame.K_SPACE and _seen != 3:
+                    skip = 0
                     ready += 1
-                    print('yeah')
                 if event.key == pygame.K_SPACE and _seen == 3:
+                    skip = 0
                     stop_moment = 1 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
@@ -84,24 +96,23 @@ def Manual_1 ():
         font = pygame.font.Font(None, 45)
         if ready == 0:
             _seen = 1
+            skip += 1
             text_f = font_f.render(manual_wel_f, True, white)
             screen.blit(text_f,(450 - text_f.get_width()//2, 365 - text_f.get_height()//2))
             text_s = font.render(manual_wel_s, True, white)
             screen.blit(text_s, (450 - text_s.get_width()//2, 420 - text_s.get_height()//2))
         if ready == 1:
             _seen = 2
+            skip += 1
             text1 = font1.render(manual1_wel, True, white)
             text2 = font1.render(manual2_wel, True, white)
             screen.blit(text1, (450 - text1.get_width()//2, 365 - text1.get_height()//2))
             screen.blit(text2, (450 - text2.get_width()//2, 415 - text2.get_height()//2))
         if ready == 2:
             _seen = 3
+            skip += 1
             text_m = font.render(manual_move, True, white)
             screen.blit(text_m, (450 - text_m.get_width()//2, 365 - text_m.get_height()//2))
-            screen.blit(arrow_image, [400 - arrow_image.get_width(), 500])
-            arrow_image.set_colorkey(black)
-            screen.blit(wasd_image, [400 + wasd_image.get_width(), 500])
-            wasd_image.set_colorkey(white)
             player_list.draw(screen)
             if rect_x > size[0]:
                 rect_x = 0
@@ -113,10 +124,15 @@ def Manual_1 ():
             if stop_moment == 1:
                 text_t_m = font_f.render(manual_try_move, True, white)
                 screen.blit(text_t_m, (450 - text_t_m.get_width()//2, 370 + text_t_m.get_height()//2))
+                screen.blit(arrow_image, [400 - arrow_image.get_width(), 500])
+                arrow_image.set_colorkey(black)
+                screen.blit(wasd_image, [400 + wasd_image.get_width(), 500])
+                wasd_image.set_colorkey(white)
             if move_count < 3:
                 stop_moment = 0
                 _seen += 1
         if ready == 3:
+            skip += 1
             block2_list.update()
             text1_look = font.render(manual1_look, True, white)
             screen.blit(text1_look, (450 - text1_look.get_width()//2, 365 - text1_look.get_height()//2))
@@ -130,9 +146,13 @@ def Manual_1 ():
             player.rect.y = size[1] - win_image.get_height()
             blocks_hit_list = pygame.sprite.spritecollide(player, block2_list, True)
             for block in blocks_hit_list:
+                pressed = True
+                exp1_pos = player.rect.x
+                exp2_pos = player.rect.y
                 lleft -= 1
                 click_sound.play()
         if ready == 4:
+            skip += 1
             block1_list.update()
             text01_look = font.render(manual01_look, True, white)
             screen.blit(text01_look, (450 - text01_look.get_width()//2, 365 - text01_look.get_height()//2))
@@ -148,6 +168,9 @@ def Manual_1 ():
             screen.blit(text1_l,[810, 50])
             screen.blit(text_l, [680,50])
             for block in blocks_hit_list:
+                pressed = True
+                exp1_pos = player.rect.x
+                exp2_pos = player.rect.y
                 lleft -= 2
                 click_sound.play()
         if ready == 5:
@@ -160,6 +183,18 @@ def Manual_1 ():
             y_w -= 4
             text_finish = font_f.render(manual_finish, True, white)
             screen.blit(text_finish, (450 - text_finish.get_width()//2, 365 - text_finish.get_height()//2))
+            if y_w < -win_image.get_height() - 7:
+                done = True
+        if pressed == True:
+            image_evol += 1
+            explosion_list.update(exp1_pos, exp2_pos, image_evol)
+            explosion_list.draw(screen)
+            if image_evol >= 45:
+                pressed = False
+                image_evol = 0
+        if skip > 240 and stop_moment != 1:
+            text_skip = font.render(manual_skip, True, white)
+            screen.blit(text_skip, (size[0] - text_skip.get_width(), 640 + text_skip.get_height()//2))
         pygame.display.flip()
         clock.tick(60)
     pygame.quit ()

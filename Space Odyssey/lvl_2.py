@@ -18,15 +18,21 @@ def Level_2 ():
     black      = (  0,   0,   0)
     white      = (255, 255, 255)
     orange     = (255,  69,   0)
-    
+    pressed = False
+    image_evol = 0
+    exp1_pos = 0
+    exp2_pos = 0
     block_list = pygame.sprite.Group()
     block1_list = pygame.sprite.Group()
     block2_list = pygame.sprite.Group()
+    explosion_list = pygame.sprite.Group()
     all_sprites_list = pygame.sprite.Group()
     crystal_list = pygame.sprite.Group()
     for i in range(8):
         add_Sp.Create_M_1(size, all_sprites_list, block_list, block1_list)
         add_Sp.Create_M_2(size, all_sprites_list, block_list, block2_list)
+    explosion = Sp_class.Explosion(exp1_pos, exp2_pos)
+    explosion_list.add(explosion)
     player = Sp_class.Player()
     all_sprites_list.add(player)
     for i in range(2):
@@ -113,7 +119,7 @@ def Level_2 ():
                 screen.blit(win_image, [x_w,y_w])
                 win_image.set_colorkey(black)
                 y_w -= 4
-                if y_w <= -86:
+                if y_w <= -size[1] - win_image.get_height() - 7:
                     done = True
                     print('Level is complete!')
             if rect_x > size[0]:
@@ -121,7 +127,7 @@ def Level_2 ():
             if rect_x < 0:
                 rect_x = size[0]
             player.rect.x = rect_x
-            player.rect.y = size[1]-85
+            player.rect.y = size[1] - win_image.get_height()
             crystal_hit_list = pygame.sprite.spritecollide(player, crystal_list, True)
             for crystal in crystal_hit_list:
                 protection = True
@@ -145,11 +151,21 @@ def Level_2 ():
                 if protection == True:
                     pass
                 if protection == False:
-                    if lleft<=0:
+                    pressed = True
+                    exp1_pos = rect_x
+                    exp2_pos = size[1] - win_image.get_height()
+                    if lleft <= 0:
                         pass
                     else:
                         lleft -= 1
                         click_sound.play()
+            if pressed == True and lleft != 0 and timeF < time_up:
+                image_evol += 1
+                explosion_list.update(exp1_pos, exp2_pos, image_evol)
+                explosion_list.draw(screen)
+                if image_evol >= 26:
+                    pressed = False
+                    image_evol = 0
             if lleft == 0:
                 screen.blit(loose_image, [210,250])
                 loose_image.set_colorkey(black)

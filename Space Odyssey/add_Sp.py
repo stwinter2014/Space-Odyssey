@@ -8,13 +8,13 @@ def Create_MM_1(size, group):
     """creates bigger meteor for the manual level, adds it to appropriate sprites group"""
     block = Sp_class.Meteor_1()
     block.rect.x = size[0]//2
-    block.rect.y = random.randrange(-30,0)
+    block.rect.y = random.randrange(150,450)
     group.add(block)
 def Create_MM_2(size, group):
     """creates smaller meteor for the manual level, adds it to appropriate sprites group"""
     block2 = Sp_class.Meteor_2()
     block2.rect.x = size[0]//2
-    block2.rect.y = random.randrange(-30,0)
+    block2.rect.y = random.randrange(500,610)
     group.add(block2)
 def Create_M_1(size, group1, group2, group3):
     """creates bigger meteor for the gaming levels, adds it to appropriate sprites groups"""
