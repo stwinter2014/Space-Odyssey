@@ -3,6 +3,7 @@ import Sp_class
 import add_Sp
 import W_L
 import comments
+import Exception_file
 
 def Level_1 ():
     pygame.init()
@@ -14,7 +15,6 @@ def Level_1 ():
 
     black      = (  0,   0,   0)
     white      = (255, 255, 255)
-    orange     = (255,  69,   0)
     pressed = False
     image_evol = 0
     exp1_pos = 0
@@ -44,15 +44,33 @@ def Level_1 ():
     l_ch = 0
     count_time = 0
     ready_ch = 0
-    click_sound = pygame.mixer.Sound("rocket1.wav")
-    parade_sound = pygame.mixer.Sound("jet_airplane.wav")
-    ready_sound = pygame.mixer.Sound("sound42.wav")
-    background_image = pygame.image.load("zvezdy.jpg").convert()
-    loose_image = pygame.image.load("Game_Over.jpg").convert()
-    win_image = pygame.image.load("player.png").convert()
-    ready_image = pygame.image.load("Ready.png").convert()
-    set_image = pygame.image.load("Set.png").convert()
-    go_image = pygame.image.load("Go.png").convert()
+    mistake = 0
+    try:
+        click_sound = pygame.mixer.Sound("rocket1.wav")
+        parade_sound = pygame.mixer.Sound("jet_airplane.wav")
+        ready_sound = pygame.mixer.Sound("sound42.wav")
+    except pygame.error:
+        print("Unable to find one of the sounds.")
+        done = True
+    try:
+        background_image = pygame.image.load("zvezdy.jpg").convert()
+        if background_image.get_width() < 900:
+            raise Exception_file.Pic_Size_Error("Background picture is not big enough. Try another one!")
+    except pygame.error:
+        print("Unable to find the background picture.")
+        done = True
+    except Exception_file.Pic_Size_Error:
+        print(Exception_file.Pic_Size_Error.txt)
+        mistake = 1
+    try:
+        loose_image = pygame.image.load("Game_Over.jpg").convert()
+        win_image = pygame.image.load("player.png").convert()
+        ready_image = pygame.image.load("Ready.png").convert()
+        set_image = pygame.image.load("Set.png").convert()
+        go_image = pygame.image.load("Go.png").convert()
+    except pygame.error:
+        print('Unable to open one of the supporting pictures')
+        done = True
     while done == False:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -69,7 +87,10 @@ def Level_1 ():
                     x_speed = 0
                 if event.key == pygame.K_RIGHT:
                     x_speed = 0
-        screen.blit(background_image, [0,0])
+        if mistake == 0:
+            screen.blit(background_image, [0,0])
+        elif mistake == 1:
+            screen.fill(black)
         if timeF == 0:
             ready_ch += 1
         if ready_ch <= 60:
@@ -96,7 +117,7 @@ def Level_1 ():
                 add_Sp.Create_M_2(size, all_sprites_list, block_list, block2_list)
             rect_x += x_speed
             timeF += 1
-            if  and lleft != 0:
+            if timeF > time_up and lleft != 0:
                 click_sound.stop()
                 all_sprites_list.empty()
                 if parade == 0:
