@@ -21,18 +21,28 @@ def Level_2 ():
     orange     = (255,  69,   0)
     pressed = False
     image_evol = 0
-    exp1_pos = 0
-    exp2_pos = 0
+    x_s_pos = 0
+    y_s_pos = 0
+    x1_s_pos = 0
+    y1_s_pos = 0
+    image_prot = 0
+    shield_count = 0
     block_list = pygame.sprite.Group()
     block1_list = pygame.sprite.Group()
     block2_list = pygame.sprite.Group()
+    shield1_list = pygame.sprite.Group()
+    shield2_list = pygame.sprite.Group()
     explosion_list = pygame.sprite.Group()
     all_sprites_list = pygame.sprite.Group()
     crystal_list = pygame.sprite.Group()
     for i in range(8):
         add_Sp.Create_M_1(size, all_sprites_list, block_list, block1_list)
         add_Sp.Create_M_2(size, all_sprites_list, block_list, block2_list)
-    explosion = Sp_class.Explosion(exp1_pos, exp2_pos)
+    shield1 = Sp_class.Shield(x_s_pos, y_s_pos)
+    shield1_list.add(shield1)
+    shield2 = Sp_class.Shield(x1_s_pos, y1_s_pos)
+    shield2_list.add(shield2)
+    explosion = Sp_class.Explosion(x_s_pos, y_s_pos)
     explosion_list.add(explosion)
     player = Sp_class.Player()
     all_sprites_list.add(player)
@@ -147,6 +157,10 @@ def Level_2 ():
             player.rect.x = rect_x
             player.rect.y = size[1] - win_image.get_height()
             crystal_hit_list = pygame.sprite.spritecollide(player, crystal_list, True)
+            x_s_pos = rect_x
+            y_s_pos = size[1] - win_image.get_height()
+            x1_s_pos = rect_x + win_image.get_width() - 25
+            y1_s_pos = size[1] - win_image.get_height()
             for crystal in crystal_hit_list:
                 protection = True
                 count_prot = 480
@@ -155,23 +169,35 @@ def Level_2 ():
             if protection == True and timeF < time_up:
                 count_prot -= 1
                 count_time += 1
+                image_prot += 1
+                if shield_count == 0:
+                    shield1_list.update(x_s_pos, y_s_pos, image_prot)
+                    shield1_list.draw(screen)
+                if shield_count == 1:
+                    shield2_list.update(x1_s_pos, y1_s_pos, image_prot)
+                    shield2_list.draw(screen)
                 if count_time >= 60:
                     counter -= 1
                     count_time = 0
+                if image_prot >= 26 and shield_count == 0:
+                    image_prot = 0
+                    shield_count += 1
+                if image_prot >= 26 and shield_count == 1:
+                    image_prot = 0
+                    shield_count = 0
                 text_prot_2 = font.render(str(counter), True, orange)
                 text_prot_1 = font.render('Shield falls in: ', True, orange) 
                 screen.blit(text_prot_1, [680, 80])
                 screen.blit(text_prot_2, [860, 80])
             if count_prot < 1:
                 protection = False
+                image_prot = 0
             blocks_hit_list = pygame.sprite.spritecollide(player, block_list, True)
             for block in blocks_hit_list:
                 if protection == True:
                     pass
                 if protection == False:
                     pressed = True
-                    exp1_pos = rect_x
-                    exp2_pos = size[1] - win_image.get_height()
                     if lleft <= 0:
                         pass
                     else:
@@ -179,7 +205,7 @@ def Level_2 ():
                         click_sound.play()
             if pressed == True and lleft != 0 and timeF < time_up:
                 image_evol += 1
-                explosion_list.update(exp1_pos, exp2_pos, image_evol)
+                explosion_list.update(x_s_pos, y_s_pos, image_evol)
                 explosion_list.draw(screen)
                 if image_evol >= 26:
                     pressed = False

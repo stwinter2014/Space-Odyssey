@@ -90,14 +90,14 @@ class Explosion (pygame.sprite.Sprite):
 class Shield (pygame.sprite.Sprite):
     def __init__(self, x_shield, y_shield):
         super().__init__()
-        self.image = pygame.image.load("shileds5.png").convert()
+        self.image = pygame.image.load("shields5.png").convert()
         self.image.set_colorkey(black)
         self.rect = self.image.get_rect()
         self.rect.x = x_shield
-        self.rect.y = y_pos
-    def update (self, x_pos, y_pos, count):
+        self.rect.y = y_shield
+    def update (self, x_shield, y_shield, count):
         if (count >= 3 and count < 6) or (count >= 21 and count < 23):
-            self.image = pygame.image.load("sheilds4.png").convert()
+            self.image = pygame.image.load("shields4.png").convert()
         if (count >= 6 and count < 9) or (count >= 18 and count < 21):
             self.image = pygame.image.load("shields3.png").convert()
         if (count >= 9 and count < 12) or (count >= 15 and count < 18):
@@ -108,6 +108,6 @@ class Shield (pygame.sprite.Sprite):
             self.image = pygame.image.load("shields5.png").convert()
         self.image.set_colorkey(black)
         self.rect = self.image.get_rect()
-        self.rect.x = x_pos
-        self.rect.y = y_pos
+        self.rect.x = x_shield
+        self.rect.y = y_shield
 
