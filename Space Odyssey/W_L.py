@@ -23,7 +23,7 @@ class Loose():
             clock.tick(60)
 
 class Win():
-    def __init__(self, lives_left, score, color, color1):
+    def __init__(self, score, color, color1):
         win_sound = pygame.mixer.Sound("cheer1.wav")
         clock=pygame.time.Clock()
         size=[300,200]
@@ -38,10 +38,9 @@ class Win():
             if win == 0:
                 win_sound.play()
                 win +=1
-            Finish = score*lives_left
             font = pygame.font.Font(None, 35)
             text = font.render ("Total score: ", True, color1)
-            text1 = font.render(str(Finish),True, color1)
+            text1 = font.render(str(score),True, color1)
             screen.blit(text1,[185, 50])
             screen.blit(text, [40,50])
             pygame.display.flip()

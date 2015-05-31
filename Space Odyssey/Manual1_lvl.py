@@ -1,6 +1,8 @@
 import pygame
 import Sp_class
 import add_Sp
+import lvl_1
+import comments
 """Manual level.
 Here is a description of how the game (1st level)
 works shown in interactive way to the gamer"""
@@ -55,6 +57,7 @@ def Manual_1 ():
     move_count = 5
     _seen = 0
     stop_moment = 0
+    manual_complete = 0
     """sounds and images assignment"""
     click_sound = pygame.mixer.Sound("rocket1.wav")
     parade_sound = pygame.mixer.Sound("jet_airplane.wav")
@@ -185,6 +188,7 @@ def Manual_1 ():
             screen.blit(text_finish, (450 - text_finish.get_width()//2, 365 - text_finish.get_height()//2))
             if y_w < -win_image.get_height() - 7:
                 done = True
+                manual_complete += 1
         if pressed == True:
             image_evol += 1
             explosion_list.update(exp1_pos, exp2_pos, image_evol)
@@ -197,5 +201,6 @@ def Manual_1 ():
             screen.blit(text_skip, (size[0] - text_skip.get_width(), 640 + text_skip.get_height()//2))
         pygame.display.flip()
         clock.tick(60)
+    if manual_complete == 1:
+        lvl_1.Level_1()
     pygame.quit ()
-Manual_1()

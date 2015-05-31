@@ -4,9 +4,10 @@ import add_Sp
 import W_L
 import comments
 import Exception_file
-
+import lvl_2
 def Level_1 ():
     pygame.init()
+    comments.level_1_welcome()
     size = [900,730]
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("Space Odyssey")
@@ -31,6 +32,7 @@ def Level_1 ():
     all_sprites_list.add(player)
     explosion = Sp_class.Explosion(exp1_pos, exp2_pos)
     explosion_list.add(explosion)
+    f_level_score = 0
     rect_x = 380
     x_speed = 0
     time_up = 5000
@@ -122,17 +124,17 @@ def Level_1 ():
                 all_sprites_list.empty()
                 if parade == 0:
                     parade_sound.play()
+                    comments.level_1_complete()
                     parade += 1
                 screen.blit(win_image, [x_w,y_w])
                 win_image.set_colorkey(black)
                 y_w -= 4
                 if y_w <= -win_image.get_height():
                     done = True
-                    print('Level is complete!')
-            if rect_x > size[0]:
+            if rect_x > size[0] - win_image.get_width()//2:
                 rect_x = 0
             if rect_x < 0:
-                rect_x = size[0]
+                rect_x = size[0] - win_image.get_width()//2
             player.rect.x = rect_x
             player.rect.y = size[1] - win_image.get_height()
             blocks_hit_list = pygame.sprite.spritecollide(player, block_list, True)
@@ -175,6 +177,6 @@ def Level_1 ():
     if lleft == 0:
         W_L.Loose(score, white, black)
     elif timeF >= 5000 and lleft != 0:
-        W_L.Win(lleft, score, white, black)
+        f_level_score = lleft*score
+        lvl_2.Level_2(f_level_score)
     pygame.quit ()
-Level_1()

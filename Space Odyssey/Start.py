@@ -1,7 +1,6 @@
 import pygame
-import lvl_1
-import lvl_2
+import Manual1_lvl
 import comments
 comments.first_welcome()
+Manual1_lvl.Manual_1()
 
-lvl_1.Level_1()

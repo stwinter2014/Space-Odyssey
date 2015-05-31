@@ -7,7 +7,7 @@ import W_L
 import comments
 import Exception_file
 
-def Level_2 ():
+def Level_2 (level_score):
     pygame.init()
     comments.level_2_welcome()
     size = [900,730]
@@ -143,17 +143,17 @@ def Level_2 ():
                 crystal_list.empty()
                 if parade == 0:
                     parade_sound.play()
+                    comments.level_2_complete()
                     parade += 1
                 screen.blit(win_image, [x_w,y_w])
                 win_image.set_colorkey(black)
                 y_w -= 4
                 if y_w <= -size[1] - win_image.get_height() - 7:
                     done = True
-                    print('Level is complete!')
-            if rect_x > size[0]:
+            if rect_x > size[0] - win_image.get_width()//2:
                 rect_x = 0
             if rect_x < 0:
-                rect_x = size[0]
+                rect_x = size[0] - win_image.get_width()//2
             player.rect.x = rect_x
             player.rect.y = size[1] - win_image.get_height()
             crystal_hit_list = pygame.sprite.spritecollide(player, crystal_list, True)
@@ -233,8 +233,9 @@ def Level_2 ():
         pygame.display.flip()
         clock.tick(60)
     if lleft == 0:
-        W_L.Loose(score, white, black)
+        final_l_score = level_score + score
+        W_L.Loose(final_l_score, white, black)
     elif timeF >= 500 and lleft != 0:
-        W_L.Win(lleft, score, white, black)
+        final_w_score = level_score + score*lleft
+        W_L.Win(final_w_score, white, black)
     pygame.quit ()
-Level_2()

@@ -1,6 +1,10 @@
 welcome1 = 'Welcome to Space Odyssey!'
 welcome2  = 'Make your way through the Asteroid Belt and return to the Earth!'
 loose_c = "You've lost the game. Try again!"
+f_level = 'First Level is on, good luck!'
+s_level = 'Good job! Second level is upon us!'
+f_complete = 'Level 1 is complete!'
+s_complete = 'Level 2 is complete!'
 length = 0
 length1 = 0
 length = len(welcome1)
@@ -29,15 +33,32 @@ def first_welcome():
         print (welcome2)
     big()
 
+def level_1_welcome():
+    @makebold
+    def encourage_1():
+        print(f_level)
+    encourage_1()
+
+def level_1_complete():
+    @makebold
+    def nice_complete_1():
+        print(f_complete)
+    nice_complete_1()
 
 def level_2_welcome():
     @makebold
-    def encourage_1():
-        print('Good job! Second level is upon us!')
+    def encourage_2():
+        print(s_level)
+    encourage_2()
+
+def level_2_complete():
+    @makebold
+    def nice_complete_2():
+        print(s_complete)
+    nice_complete_2()
 
 def loose_conf():
     @makebold
     def conf():
         print(loose_c)
     conf()
-
