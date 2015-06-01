@@ -6,14 +6,13 @@ import add_Sp
 import W_L
 import comments
 import Exception_file
-import lvl_3
 
-def Level_2 (level_score):
+def Level_3 (level_2_score):
     pygame.init()
-    comments.level_2_welcome()
+    #comments.level_3_welcome()
     size = [900,730]
     screen = pygame.display.set_mode(size)
-    pygame.display.set_caption("Space Odyssey. Level 2")
+    pygame.display.set_caption("Space Odyssey. Level 3")
     done = False
     clock = pygame.time.Clock()
 
@@ -26,6 +25,8 @@ def Level_2 (level_score):
     y_s_pos = 0
     x1_s_pos = 0
     y1_s_pos = 0
+    x_w_pos = 0
+    y_w_pos = 0
     image_prot = 0
     shield_count = 0
     block_list = pygame.sprite.Group()
@@ -34,8 +35,10 @@ def Level_2 (level_score):
     shield1_list = pygame.sprite.Group()
     shield2_list = pygame.sprite.Group()
     explosion_list = pygame.sprite.Group()
+    destruction_list = pygame.sprite.Group()
     all_sprites_list = pygame.sprite.Group()
     crystal_list = pygame.sprite.Group()
+    weapon_list = pygame.sprite.Group()
     for i in range(8):
         add_Sp.Create_M_1(size, all_sprites_list, block_list, block1_list)
         add_Sp.Create_M_2(size, all_sprites_list, block_list, block2_list)
@@ -45,6 +48,10 @@ def Level_2 (level_score):
     shield2_list.add(shield2)
     explosion = Sp_class.Explosion(x_s_pos, y_s_pos)
     explosion_list.add(explosion)
+    weapon = Sp_class.Weapon()
+    weapon_list.add(weapon)
+    destruction = Sp_class.Explosion(x_w_pos, y_w_pos)
+    destruction_list.add(destruction)
     player = Sp_class.Player()
     all_sprites_list.add(player)
     add_Sp.Create_C(size, crystal_list)
@@ -64,6 +71,12 @@ def Level_2 (level_score):
     count_time = 0
     ready_ch = 0
     mistake = 0
+    wep_engage = False
+    destruct_im = 0
+    collision = False
+    recharge = 185
+    text_output = False
+    collision_c = False
     try:
         click_sound = pygame.mixer.Sound("rocket1.wav")
         parade_sound = pygame.mixer.Sound("jet_airplane.wav")
@@ -102,11 +115,15 @@ def Level_2 (level_score):
                     x_speed = 10
                 if event.key == pygame.K_ESCAPE and lleft == 0:
                     done = True
+                if event.key == pygame.K_SPACE and recharge == 185:
+                    wep_engage = True
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     x_speed = 0
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     x_speed = 0
+                if event.key == pygame.K_SPACE:
+                    pass
         if mistake == 0:
             screen.blit(background_image, [0,0])
         elif mistake == 1:
@@ -130,6 +147,7 @@ def Level_2 (level_score):
                 ready_sound.play()
         elif ready_ch > 180:
             block_list.update()
+            weapon_list.update(wep_engage, win_image, rect_x)
             crystal_list.update()
             font = pygame.font.Font(None, 35)
             if len(block1_list) < 8:
@@ -137,7 +155,6 @@ def Level_2 (level_score):
             if len(block2_list) < 8:
                 add_Sp.Create_M_2(size, all_sprites_list, block_list, block2_list)
             if len(crystal_list) < 1 and timeF%840 == 0:
-                print('yes')
                 add_Sp.Create_C(size, crystal_list)
             rect_x += x_speed
             timeF += 1
@@ -227,6 +244,42 @@ def Level_2 (level_score):
             if timer == 60:
                 score += 10
                 timer = 0
+            if wep_engage == True:
+                text_output = True
+                weapon_list.draw(screen)
+            if text_output == True:
+                recharge -= 1
+                text1_recharge = font.render ("Battery recharge in: ", True, white)
+                text2_recharge = font.render (str(recharge//60), True, white)
+                screen.blit(text1_recharge,[600, 110])
+                screen.blit(text2_recharge,[860, 110])
+                if recharge <= 59:
+                    text_output = False
+                    recharge = 185
+            if weapon.rect.y <= 0:
+                wep_engage = False
+            weapon_hit_list = pygame.sprite.spritecollide(weapon, block_list, True)
+            for block in weapon_hit_list:
+                wep_engage = False
+                collision = True
+            weapon_c_hit_list = pygame.sprite.spritecollide(weapon, crystal_list, True)
+            for crystal in weapon_c_hit_list:
+                wep_engage = False
+                collision_c = True
+            if collision == True:
+                destruct_im += 1
+                explosion_list.update(block.rect.x, block.rect.y, destruct_im)
+                explosion_list.draw(screen)
+                if destruct_im >= 26:
+                    collision = False
+                    destruct_im = 0
+            if collision_c == True:
+                destruct_im += 1
+                explosion_list.update(crystal.rect.x, crystal.rect.y, destruct_im)
+                explosion_list.draw(screen)
+                if destruct_im >= 26:
+                    collision_c = False
+                    destruct_im = 0
             all_sprites_list.draw(screen)
             crystal_list.draw(screen)
             text = font.render ("Lives left: ", True, white)
@@ -238,12 +291,12 @@ def Level_2 (level_score):
         pygame.display.flip()
         clock.tick(60)
     if lleft == 0:
-        final_l_score = level_score + score
+        final_l_score = level_2_score + score
         W_L.Loose(final_l_score, white, black)
     if timeF < 5000:
-        final_l_score = level_score + score
+        final_l_score = level_2_score + score
         W_L.Win(final_l_score, white, black)
     elif timeF >= 5000 and lleft != 0:
-        level_2_score = level_score + score*lleft
-        lvl_3.Level_3(level_2_score)
+        final_w_score = level_2_score + score*lleft
+        W_L.Win(level_2_score, white, black)
     pygame.quit ()

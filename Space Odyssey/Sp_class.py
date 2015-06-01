@@ -54,14 +54,18 @@ class Crystal(pygame.sprite.Sprite):
             self.reset_pos()
 
 class Weapon(pygame.sprite.Sprite):
-    def __init__(self, color, width, height):
+    def __init__(self):
         super().__init__()
-        self.image = pygame.Surface([width, height])
-        self.image.fill(color)
-        pygame.draw.rect(self.image,color,[0,0,width,height])
+        self.image = pygame.image.load("weapon.png").convert()
+        self.image.set_colorkey(black)
         self.rect = self.image.get_rect()
-    def update(self):
-        self.rect.y -= 3
+    def reset_pos(self, image, rect_x):
+        self.rect.x = rect_x + image.get_width()//2
+        self.rect.y = size[1] - image.get_height()
+    def update(self, engage, image, rect_x):
+        self.rect.y -= 7
+        if engage == False:
+            self.reset_pos(image, rect_x)
 
 class Explosion (pygame.sprite.Sprite):
     def __init__(self, x_pos, y_pos):

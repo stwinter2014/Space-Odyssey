@@ -78,16 +78,16 @@ def Level_1 ():
             if event.type == pygame.QUIT:
                 done = True
             if event.type == pygame.KEYDOWN:   
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_a: 
                     x_speed = -10
-                if event.key == pygame.K_RIGHT:
+                if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     x_speed=10
                 if event.key == pygame.K_ESCAPE and lleft == 0:
                     done = True
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     x_speed = 0
-                if event.key == pygame.K_RIGHT:
+                if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     x_speed = 0
         if mistake == 0:
             screen.blit(background_image, [0,0])
