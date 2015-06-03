@@ -192,6 +192,5 @@ def Level_1 ():
         W_L.Win(score, white, black)
     elif timeF >= 5000 and lleft != 0:
         f_level_score = lleft*score
-        print(lleft*score)
         lvl_2.Level_2(f_level_score)
     pygame.quit ()

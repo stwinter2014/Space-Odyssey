@@ -316,6 +316,5 @@ def Level_3 (level_2_score):
         W_L.Win(final_l_score, white, black)
     elif timeF >= 5000 and lleft != 0:
         final_w_score = level_2_score + score*lleft + bonus_s*10
-        print(score*lleft, bonus_s*10)
-        W_L.Win(level_2_score, white, black)
+        W_L.Win(final_w_score, white, black)
     pygame.quit ()

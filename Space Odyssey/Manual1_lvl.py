@@ -48,7 +48,7 @@ def Manual_1 ():
     manual_finish = 'Now your are ready for your journey!'
     manual_skip = 'Press SPACE to continue'
     x_speed = 0
-    lleft = 5
+    lleft = 7
     x_w = 380
     y_w = 730
     parade = 0
