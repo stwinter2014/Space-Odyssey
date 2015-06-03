@@ -10,7 +10,7 @@ def Level_1 ():
     comments.level_1_welcome()
     size = [900,730]
     screen = pygame.display.set_mode(size)
-    pygame.display.set_caption("Space Odyssey")
+    pygame.display.set_caption("Space Odyssey. Level 1")
     done = False
     clock = pygame.time.Clock()
 
@@ -36,7 +36,7 @@ def Level_1 ():
     rect_x = 380
     x_speed = 0
     time_up = 5000
-    lleft = 5
+    lleft = 7
     timer = 0
     score = 0
     timeF = 0
@@ -137,8 +137,18 @@ def Level_1 ():
                 rect_x = size[0] - win_image.get_width()//2
             player.rect.x = rect_x
             player.rect.y = size[1] - win_image.get_height()
-            blocks_hit_list = pygame.sprite.spritecollide(player, block_list, True)
-            for block in blocks_hit_list:
+            blocks1_hit_list = pygame.sprite.spritecollide(player, block1_list, True)
+            for block in blocks1_hit_list:
+                pressed = True
+                exp1_pos = rect_x
+                exp2_pos = size[1] - win_image.get_height()
+                if lleft <= 0:
+                    pass
+                else:
+                    lleft -= 2
+                    click_sound.play()
+            blocks2_hit_list = pygame.sprite.spritecollide(player, block2_list, True)
+            for block in blocks2_hit_list:
                 pressed = True
                 exp1_pos = rect_x
                 exp2_pos = size[1] - win_image.get_height()
@@ -165,6 +175,8 @@ def Level_1 ():
             if timer == 60:
                 score += 10
                 timer = 0
+            if lleft <= 0:
+                lleft = 0
             all_sprites_list.draw(screen)
             text = font.render ("Lives left: ", True, white)
             text1 = font.render(str(lleft), True, white)
@@ -176,7 +188,10 @@ def Level_1 ():
         clock.tick(60)
     if lleft == 0:
         W_L.Loose(score, white, black)
+    elif timeF < 5000 and lleft != 0:
+        W_L.Win(score, white, black)
     elif timeF >= 5000 and lleft != 0:
         f_level_score = lleft*score
+        print(lleft*score)
         lvl_2.Level_2(f_level_score)
     pygame.quit ()

@@ -36,7 +36,7 @@ def Level_2 (level_score):
     explosion_list = pygame.sprite.Group()
     all_sprites_list = pygame.sprite.Group()
     crystal_list = pygame.sprite.Group()
-    for i in range(8):
+    for i in range(9):
         add_Sp.Create_M_1(size, all_sprites_list, block_list, block1_list)
         add_Sp.Create_M_2(size, all_sprites_list, block_list, block2_list)
     shield1 = Sp_class.Shield(x_s_pos, y_s_pos)
@@ -51,7 +51,7 @@ def Level_2 (level_score):
     rect_x = 380
     x_speed = 0
     time_up = 5040
-    lleft = 5
+    lleft = 7
     timer = 0
     score = 0
     timeF = 0
@@ -132,12 +132,11 @@ def Level_2 (level_score):
             block_list.update()
             crystal_list.update()
             font = pygame.font.Font(None, 35)
-            if len(block1_list) < 8:
+            if len(block1_list) < 9:
                 add_Sp.Create_M_1(size, all_sprites_list, block_list, block1_list)
-            if len(block2_list) < 8:
+            if len(block2_list) < 9:
                 add_Sp.Create_M_2(size, all_sprites_list, block_list, block2_list)
-            if len(crystal_list) < 1 and timeF%840 == 0:
-                print('yes')
+            if len(crystal_list) < 1 and timeF%840 == 0 and timeF < time_up:
                 add_Sp.Create_C(size, crystal_list)
             rect_x += x_speed
             timeF += 1
@@ -197,8 +196,19 @@ def Level_2 (level_score):
             if count_prot < 1:
                 protection = False
                 image_prot = 0
-            blocks_hit_list = pygame.sprite.spritecollide(player, block_list, True)
-            for block in blocks_hit_list:
+            blocks1_hit_list = pygame.sprite.spritecollide(player, block1_list, True)
+            for block in blocks1_hit_list:
+                if protection == True:
+                    pass
+                if protection == False:
+                    pressed = True
+                    if lleft <= 0 or timeF >= time_up:
+                        pass
+                    else:
+                        lleft -= 2
+                        click_sound.play()
+            blocks2_hit_list = pygame.sprite.spritecollide(player, block2_list, True)
+            for block in blocks2_hit_list:
                 if protection == True:
                     pass
                 if protection == False:
@@ -227,6 +237,8 @@ def Level_2 (level_score):
             if timer == 60:
                 score += 10
                 timer = 0
+            if lleft <= 0:
+                lleft = 0
             all_sprites_list.draw(screen)
             crystal_list.draw(screen)
             text = font.render ("Lives left: ", True, white)
@@ -240,10 +252,11 @@ def Level_2 (level_score):
     if lleft == 0:
         final_l_score = level_score + score
         W_L.Loose(final_l_score, white, black)
-    if timeF < 5000:
+    if timeF < 5000 and lleft != 0:
         final_l_score = level_score + score
         W_L.Win(final_l_score, white, black)
     elif timeF >= 5000 and lleft != 0:
         level_2_score = level_score + score*lleft
+        print(score*lleft)
         lvl_3.Level_3(level_2_score)
     pygame.quit ()

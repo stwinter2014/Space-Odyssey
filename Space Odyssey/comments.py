@@ -3,8 +3,10 @@ welcome2  = 'Make your way through the Asteroid Belt and return to the Earth!'
 loose_c = "You've lost the game. Try again!"
 f_level = 'First Level is on, good luck!'
 s_level = 'Good job! Second level is upon us!'
+t_level = 'Fabulous! The final level is starting!'
 f_complete = 'Level 1 is complete!'
 s_complete = 'Level 2 is complete!'
+t_complete = 'Level 3 is complete!'
 length = 0
 length1 = 0
 length = len(welcome1)
@@ -56,6 +58,18 @@ def level_2_complete():
     def nice_complete_2():
         print(s_complete)
     nice_complete_2()
+
+def level_3_welcome():
+    @makebold
+    def encourage_3():
+        print(t_level)
+    encourage_3()
+
+def level_3_complete():
+    @makebold
+    def nice_complete_3():
+        print(t_complete)
+    nice_complete_3()
 
 def loose_conf():
     @makebold

@@ -9,7 +9,7 @@ import Exception_file
 
 def Level_3 (level_2_score):
     pygame.init()
-    #comments.level_3_welcome()
+    comments.level_3_welcome()
     size = [900,730]
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("Space Odyssey. Level 3")
@@ -39,7 +39,7 @@ def Level_3 (level_2_score):
     all_sprites_list = pygame.sprite.Group()
     crystal_list = pygame.sprite.Group()
     weapon_list = pygame.sprite.Group()
-    for i in range(8):
+    for i in range(11):
         add_Sp.Create_M_1(size, all_sprites_list, block_list, block1_list)
         add_Sp.Create_M_2(size, all_sprites_list, block_list, block2_list)
     shield1 = Sp_class.Shield(x_s_pos, y_s_pos)
@@ -58,7 +58,7 @@ def Level_3 (level_2_score):
     rect_x = 380
     x_speed = 0
     time_up = 5040
-    lleft = 5
+    lleft = 7
     timer = 0
     score = 0
     timeF = 0
@@ -77,6 +77,7 @@ def Level_3 (level_2_score):
     recharge = 185
     text_output = False
     collision_c = False
+    bonus_s = 0
     try:
         click_sound = pygame.mixer.Sound("rocket1.wav")
         parade_sound = pygame.mixer.Sound("jet_airplane.wav")
@@ -150,9 +151,9 @@ def Level_3 (level_2_score):
             weapon_list.update(wep_engage, win_image, rect_x)
             crystal_list.update()
             font = pygame.font.Font(None, 35)
-            if len(block1_list) < 8:
+            if len(block1_list) < 11:
                 add_Sp.Create_M_1(size, all_sprites_list, block_list, block1_list)
-            if len(block2_list) < 8:
+            if len(block2_list) < 11:
                 add_Sp.Create_M_2(size, all_sprites_list, block_list, block2_list)
             if len(crystal_list) < 1 and timeF%840 == 0:
                 add_Sp.Create_C(size, crystal_list)
@@ -165,7 +166,7 @@ def Level_3 (level_2_score):
                 crystal_list.empty()
                 if parade == 0:
                     parade_sound.play()
-                    comments.level_2_complete()
+                    comments.level_3_complete()
                     parade += 1
                 screen.blit(win_image, [x_w,y_w])
                 win_image.set_colorkey(black)
@@ -214,8 +215,19 @@ def Level_3 (level_2_score):
             if count_prot < 1:
                 protection = False
                 image_prot = 0
-            blocks_hit_list = pygame.sprite.spritecollide(player, block_list, True)
-            for block in blocks_hit_list:
+            blocks1_hit_list = pygame.sprite.spritecollide(player, block1_list, True)
+            for block in blocks1_hit_list:
+                if protection == True:
+                    pass
+                if protection == False:
+                    pressed = True
+                    if lleft <= 0 or timeF >= time_up:
+                        pass
+                    else:
+                        lleft -= 2
+                        click_sound.play()
+            blocks2_hit_list = pygame.sprite.spritecollide(player, block2_list, True)
+            for block in blocks2_hit_list:
                 if protection == True:
                     pass
                 if protection == False:
@@ -240,6 +252,8 @@ def Level_3 (level_2_score):
                     all_sprites_list.remove(player)
                     comments.loose_conf()
                     l_ch += 1
+            if lleft <= 0:
+                lleft = 0
             timer += 1
             if timer == 60:
                 score += 10
@@ -260,12 +274,16 @@ def Level_3 (level_2_score):
                 wep_engage = False
             weapon_hit_list = pygame.sprite.spritecollide(weapon, block_list, True)
             for block in weapon_hit_list:
+                click_sound.play()
+                bonus_s += 1
                 wep_engage = False
                 collision = True
             weapon_c_hit_list = pygame.sprite.spritecollide(weapon, crystal_list, True)
             for crystal in weapon_c_hit_list:
+                bonus_s -= 1
                 wep_engage = False
                 collision_c = True
+                click_sound.play()
             if collision == True:
                 destruct_im += 1
                 explosion_list.update(block.rect.x, block.rect.y, destruct_im)
@@ -291,12 +309,13 @@ def Level_3 (level_2_score):
         pygame.display.flip()
         clock.tick(60)
     if lleft == 0:
-        final_l_score = level_2_score + score
+        final_l_score = level_2_score + score + bonus_s*10
         W_L.Loose(final_l_score, white, black)
     if timeF < 5000:
-        final_l_score = level_2_score + score
+        final_l_score = level_2_score + score + bonus_s*10
         W_L.Win(final_l_score, white, black)
     elif timeF >= 5000 and lleft != 0:
-        final_w_score = level_2_score + score*lleft
+        final_w_score = level_2_score + score*lleft + bonus_s*10
+        print(score*lleft, bonus_s*10)
         W_L.Win(level_2_score, white, black)
     pygame.quit ()
