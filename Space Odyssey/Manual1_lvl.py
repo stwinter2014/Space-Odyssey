@@ -189,6 +189,9 @@ def Manual_1 ():
             if y_w < -win_image.get_height() - 7:
                 done = True
                 manual_complete += 1
+        if ready == 6:
+            done = True
+            manual_complete += 1
         if pressed == True:
             image_evol += 1
             explosion_list.update(exp1_pos, exp2_pos, image_evol)
